@@ -14,7 +14,7 @@ public class FilterTest {
         Message msg = TestMessageProvider.getTestMessage("foobar");
         filter.config(msg);
         filter.run(msg);
-        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getBoolean("filtered"));
+        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getDouble("filtered") == 1);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class FilterTest {
         Message msg = TestMessageProvider.getTestMessage(42);
         filter.config(msg);
         filter.run(msg);
-        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getBoolean("filtered"));
+        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getDouble("filtered") == 1);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class FilterTest {
         Message msg = TestMessageProvider.getTestMessage(4.2);
         filter.config(msg);
         filter.run(msg);
-        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getBoolean("filtered"));
+        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getDouble("filtered") == 1);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FilterTest {
         Message msg = TestMessageProvider.getTestMessage(42);
         filter.config(msg);
         filter.run(msg);
-        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getBoolean("filtered"));
+        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getDouble("filtered") == 1);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class FilterTest {
         Message msg = TestMessageProvider.getTestMessage(42.0);
         filter.config(msg);
         filter.run(msg);
-        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getBoolean("filtered"));
+        Assert.assertTrue((new JSONObject(msg.getMessageString())).getJSONObject("analytics").getDouble("filtered") == 1);
     }
 
 

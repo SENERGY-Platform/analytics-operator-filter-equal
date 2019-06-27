@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import org.infai.seits.sepl.operators.Config;
 import org.infai.seits.sepl.operators.Message;
 import org.infai.seits.sepl.operators.OperatorInterface;
 import org.json.JSONTokener;
@@ -31,6 +30,7 @@ public class Filter implements OperatorInterface {
         try{
             boolean ok = false;
             if(this.value instanceof String){
+                System.out.println("DEBUG: received message = "+message.getInput("value").getString()); //debug
                 ok = this.value.equals(message.getInput("value").getString());
             }else if(this.value instanceof Double){
                 ok = this.value.equals(message.getInput("value").getValue());
@@ -40,7 +40,7 @@ public class Filter implements OperatorInterface {
                 ok = this.value.equals(message.getInput("value").getValue().floatValue());
             }
             if(ok){
-                message.output("filtered", true);   //signal library to send message to next receiver
+                message.output("filtered", 1);   //signal library to send message to next receiver
             }
         }catch (Exception e){
             e.printStackTrace();
