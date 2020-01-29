@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 InfAI (CC SES)
+ * Copyright 2020 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,12 @@ public class Operator {
 
     public static void main(String[] args) {
         Stream stream  = new Stream();
-        Filter filter = new Filter(new Config().getConfigValue("value", "\"\""));
+        Config config = new Config();
+        EventEqual filter = new EventEqual(
+                config.getConfigValue("value", "\"\""),
+                config.getConfigValue("url", "\"\""),
+                config.getConfigValue("eventId", "\"\"")
+        );
         stream.start(filter);
     }
 }
