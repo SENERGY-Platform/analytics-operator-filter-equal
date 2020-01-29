@@ -24,8 +24,8 @@ public class Operator {
         Config config = new Config();
         EventEqual filter = new EventEqual(
                 config.getConfigValue("value", "\"\""),
-                config.getConfigValue("url", "\"\""),
-                config.getConfigValue("eventId", "\"\"")
+                config.getConfigValue("url", ""),
+                config.getConfigValue("eventId", "")
         );
         stream.start(filter);
     }
