@@ -50,12 +50,12 @@ public class EventEqualWithConversionTest {
             try {
                 JSONObject jsonObject = (JSONObject)jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
                 if(
-                        jsonObject.containsKey("localVariables")
-                        && ((JSONObject)jsonObject.get("localVariables")).containsKey("event")
-                        && ((JSONObject)((JSONObject)jsonObject.get("localVariables")).get("event")).containsKey("value")
+                        jsonObject.containsKey("processVariablesLocal")
+                        && ((JSONObject)jsonObject.get("processVariablesLocal")).containsKey("event")
+                        && ((JSONObject)((JSONObject)jsonObject.get("processVariablesLocal")).get("event")).containsKey("value")
                 ){
                     EventEqualWithConversionTest.called = true;
-                    EventEqualWithConversionTest.processVariable = ((JSONObject)((JSONObject)jsonObject.get("localVariables")).get("event")).get("value");
+                    EventEqualWithConversionTest.processVariable = ((JSONObject)((JSONObject)jsonObject.get("processVariablesLocal")).get("event")).get("value");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -87,12 +87,12 @@ public class EventEqualWithConversionTest {
             try {
                 JSONObject jsonObject = (JSONObject)jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
                 if(
-                        jsonObject.containsKey("localVariables")
-                                && ((JSONObject)jsonObject.get("localVariables")).containsKey("event")
-                                && ((JSONObject)((JSONObject)jsonObject.get("localVariables")).get("event")).containsKey("value")
+                        jsonObject.containsKey("processVariablesLocal")
+                                && ((JSONObject)jsonObject.get("processVariablesLocal")).containsKey("event")
+                                && ((JSONObject)((JSONObject)jsonObject.get("processVariablesLocal")).get("event")).containsKey("value")
                 ){
                     EventEqualWithConversionTest.called = true;
-                    EventEqualWithConversionTest.processVariable = ((JSONObject)((JSONObject)jsonObject.get("localVariables")).get("event")).get("value");
+                    EventEqualWithConversionTest.processVariable = ((JSONObject)((JSONObject)jsonObject.get("processVariablesLocal")).get("event")).get("value");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
