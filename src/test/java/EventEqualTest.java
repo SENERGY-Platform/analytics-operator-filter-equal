@@ -61,7 +61,7 @@ public class EventEqualTest {
                 e.printStackTrace();
             }
         });
-        EventEqual events = new EventEqual(configuredValue, "http://localhost:"+server.getAddress().getPort()+"/endpoint", "test");
+        EventEqual events = new EventEqual(configuredValue, "http://localhost:"+server.getAddress().getPort()+"/endpoint", "test", new Converter("", "", ""));
         Message msg = TestMessageProvider.getTestMessage(actualValue);
         events.config(msg);
         events.run(msg);
