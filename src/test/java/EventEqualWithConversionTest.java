@@ -15,7 +15,14 @@
  */
 
 import com.sun.net.httpserver.HttpServer;
-import org.infai.seits.sepl.operators.Message;
+import org.infai.ses.senergy.models.DeviceMessageModel;
+import org.infai.ses.senergy.models.MessageModel;
+import org.infai.ses.senergy.operators.Config;
+import org.infai.ses.senergy.operators.Helper;
+import org.infai.ses.senergy.operators.Message;
+import org.infai.ses.senergy.testing.utils.JSONHelper;
+import org.infai.ses.senergy.utils.ConfigProvider;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -43,7 +50,7 @@ public class EventEqualWithConversionTest {
         return candidate;
     }
 
-    private void test(String configuredValue, Object actualValue, boolean expectedToTrigger) throws IOException {
+    private void test(String configuredValue, Object actualValue, boolean expectedToTrigger) throws IOException, JSONException {
         EventEqualWithConversionTest.called = false;
         HttpServer server = TriggerServerMock.create(inputStream -> {
             JSONParser jsonParser = new JSONParser();
@@ -64,9 +71,19 @@ public class EventEqualWithConversionTest {
         HttpServer converterServer = ConverterServerMock.create("/inCharacteristic/outCharacteristic");
         Converter converter = new Converter("http://localhost:"+converterServer.getAddress().getPort(), "inCharacteristic", "outCharacteristic");
         EventEqual events = new EventEqual(configuredValue, "http://localhost:"+server.getAddress().getPort()+"/endpoint", "test", converter);
-        Message msg = TestMessageProvider.getTestMessage(actualValue);
-        events.config(msg);
-        events.run(msg);
+        Config config = new Config(new JSONHelper().parseFile("config.json").toString());
+        ConfigProvider.setConfig(config);
+        MessageModel model = new MessageModel();
+        Message message = new Message();
+        events.configMessage(message);
+        JSONObject m = new JSONHelper().parseFile("message.json");
+        ((JSONObject)((JSONObject) m.get("value")).get("reading")).put("value", actualValue);
+        DeviceMessageModel deviceMessageModel = JSONHelper.getObjectFromJSONString(m.toString(), DeviceMessageModel.class);
+        assert deviceMessageModel != null;
+        String topicName = config.getInputTopicsConfigs().get(0).getName();
+        model.putMessage(topicName, Helper.deviceToInputMessageModel(deviceMessageModel, topicName));
+        message.setMessage(model);
+        events.run(message);
         server.stop(0);
         Assert.assertEquals(EventEqualWithConversionTest.called, expectedToTrigger);
         if(expectedToTrigger){
@@ -80,7 +97,7 @@ public class EventEqualWithConversionTest {
         }
     }
 
-    private void testWithConversion(String configuredValue, Object actualValue, String conversionResp, boolean expectedToTrigger) throws IOException {
+    private void testWithConversion(String configuredValue, Object actualValue, String conversionResp, boolean expectedToTrigger) throws IOException, JSONException {
         EventEqualWithConversionTest.called = false;
         HttpServer server = TriggerServerMock.create(inputStream -> {
             JSONParser jsonParser = new JSONParser();
@@ -101,9 +118,19 @@ public class EventEqualWithConversionTest {
         HttpServer converterServer = ConverterServerMock.createWithResponse("/inCharacteristic/outCharacteristic", conversionResp);
         Converter converter = new Converter("http://localhost:"+converterServer.getAddress().getPort(), "inCharacteristic", "outCharacteristic");
         EventEqual events = new EventEqual(configuredValue, "http://localhost:"+server.getAddress().getPort()+"/endpoint", "test", converter);
-        Message msg = TestMessageProvider.getTestMessage(actualValue);
-        events.config(msg);
-        events.run(msg);
+        Config config = new Config(new JSONHelper().parseFile("config.json").toString());
+        ConfigProvider.setConfig(config);
+        MessageModel model = new MessageModel();
+        Message message = new Message();
+        events.configMessage(message);
+        JSONObject m = new JSONHelper().parseFile("message.json");
+        ((JSONObject)((JSONObject) m.get("value")).get("reading")).put("value", actualValue);
+        DeviceMessageModel deviceMessageModel = JSONHelper.getObjectFromJSONString(m.toString(), DeviceMessageModel.class);
+        assert deviceMessageModel != null;
+        String topicName = config.getInputTopicsConfigs().get(0).getName();
+        model.putMessage(topicName, Helper.deviceToInputMessageModel(deviceMessageModel, topicName));
+        message.setMessage(model);
+        events.run(message);
         server.stop(0);
         Assert.assertEquals(EventEqualWithConversionTest.called, expectedToTrigger);
         if(expectedToTrigger){
@@ -118,83 +145,83 @@ public class EventEqualWithConversionTest {
     }
 
     @Test
-    public void stringEqualTrue() throws IOException {
+    public void stringEqualTrue() throws IOException, JSONException {
         test("\"foobar\"", "foobar",true);
     }
 
     @Test
-    public void convertedStringEqualTrue() throws IOException {
+    public void convertedStringEqualTrue() throws IOException, JSONException {
         testWithConversion("\"foobar\"", "foo", "\"foobar\"",true);
     }
 
     @Test
-    public void convertedStringEqualFalse() throws IOException {
+    public void convertedStringEqualFalse() throws IOException, JSONException {
         testWithConversion("\"foobar\"", "foobar", "foobar",false);
     }
 
     @Test
-    public void stringEqualFalse() throws IOException {
+    public void stringEqualFalse() throws IOException, JSONException {
         test("\"foobar\"", "foo",false);
     }
 
     @Test
-    public void numberEqualTrue() throws IOException {
+    public void numberEqualTrue() throws IOException, JSONException {
         test("42", 42,true);
     }
 
     @Test
-    public void convertedNumberEqualTrue() throws IOException {
+    public void convertedNumberEqualTrue() throws IOException, JSONException {
         testWithConversion("42", 42, "42",true);
     }
 
     @Test
-    public void convertedNumberEqualFalse() throws IOException {
+    public void convertedNumberEqualFalse() throws IOException, JSONException {
         testWithConversion("42", 42, "13",false);
     }
 
     @Test
-    public void convertedNumberEqualTrue2() throws IOException {
+    public void convertedNumberEqualTrue2() throws IOException, JSONException {
         testWithConversion("42", 13, "42",true);
     }
 
     @Test
-    public void convertedNumberEqualFalse2() throws IOException {
+    public void convertedNumberEqualFalse2() throws IOException, JSONException {
         testWithConversion("42", 13, "13",false);
     }
 
     @Test
-    public void floatEqualTrue() throws IOException {
+    public void floatEqualTrue() throws IOException, JSONException {
         test("4.2", 4.2, true);
     }
 
     @Test
-    public void floatEqualTrue2() throws IOException {
+    public void floatEqualTrue2() throws IOException, JSONException {
         test("42.0", 42.0, true);
     }
 
     @Test
-    public void floatEqualTrue3() throws IOException {
+    public void floatEqualTrue3() throws IOException, JSONException {
         test("42", 42.0, true);
     }
 
 
     @Test
-    public void floatEqualFalse() throws IOException {
+    public void floatEqualFalse() throws IOException, JSONException {
         test("4.2", 13, false);
     }
 
     @Test
-    public void numberEqualFalse() throws IOException {
+    public void numberEqualFalse() throws IOException, JSONException {
         test("42", 13, false);
     }
 
     @Test
-    public void stringNumber() throws IOException {
+    public void stringNumber() throws IOException, JSONException {
         test("\"foobar\"", 42, false);
     }
 
     @Test
-    public void numberString() throws IOException {
+    public void numberString() throws IOException, JSONException {
         test("42", "foo", false);
     }
 }
