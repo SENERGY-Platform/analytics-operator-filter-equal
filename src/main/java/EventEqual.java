@@ -49,56 +49,38 @@ public class EventEqual extends BaseOperator {
     public void run(Message message) {
         try {
             FlexInput input = message.getFlexInput("value");
-            if (this.operator(input)) {
-                this.trigger(input);
+            Object value = this.getValueOfInput(input);
+            if (this.operator(value)) {
+                this.trigger(value);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private boolean operator(FlexInput input) throws IOException {
+    private Object getValueOfInput(FlexInput input) throws IOException, NoValueException {
         Object value;
-        try {
-            if (this.value instanceof String) {
-                value = input.getString();
-            } else if (this.value instanceof Double) {
-                value = input.getValue();
-            } else if (this.value instanceof Integer) {
-                value = input.getValue().intValue();
-            } else if (this.value instanceof Float) {
-                value = input.getValue().floatValue();
-            } else {
-                value = null;
-            }
-        } catch (NoValueException e) {
-            e.printStackTrace();
-            return false;
+        if (this.value instanceof String) {
+            value = input.getString();
+        } else if (this.value instanceof Double) {
+            value = input.getValue();
+        } else if (this.value instanceof Integer) {
+            value = input.getValue().intValue();
+        } else if (this.value instanceof Float) {
+            value = input.getValue().floatValue();
+        } else {
+            value = null;
         }
         value = this.converter.convert(value);
+        return value;
+    }
+
+    private boolean operator(Object value) throws IOException {
         return this.value.equals(value);
     }
 
 
-    private void trigger(FlexInput input) {
-        Object value;
-        try {
-            if (this.value instanceof String) {
-                value = input.getString();
-            } else if (this.value instanceof Double) {
-                value = input.getValue();
-            } else if (this.value instanceof Integer) {
-                value = input.getValue().intValue();
-            } else if (this.value instanceof Float) {
-                value = input.getValue().floatValue();
-            } else {
-                value = input.getValue();
-            }
-        } catch (NoValueException e) {
-            e.printStackTrace();
-            return;
-        }
-
+    private void trigger(Object value) {
         JSONObject json;
         try {
             json = new JSONObject()

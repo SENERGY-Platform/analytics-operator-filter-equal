@@ -151,7 +151,7 @@ public class EventEqualWithConversionTest {
 
     @Test
     public void convertedStringEqualTrue() throws IOException, JSONException {
-        testWithConversion("\"foobar\"", "foo", "\"foobar\"",true);
+        testWithConversion("\"foobar\"", "foobar", "\"foobar\"",true);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class EventEqualWithConversionTest {
 
     @Test
     public void convertedNumberEqualTrue2() throws IOException, JSONException {
-        testWithConversion("42", 13, "42",true);
+        testWithConversion("42", 42, "42",true);
     }
 
     @Test
