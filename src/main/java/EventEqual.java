@@ -71,7 +71,7 @@ public class EventEqual extends BaseOperator {
         } else {
             value = null;
         }
-        value = this.converter.convert(value);
+        value = this.converter.convert(input, value);
         return value;
     }
 
