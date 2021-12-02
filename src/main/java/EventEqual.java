@@ -36,13 +36,15 @@ public class EventEqual extends BaseOperator {
     private Object value;
     private String url;
     private String eventId;
+    private String userToken;
     private Converter converter;
 
-    public EventEqual(String valueString, String url, String eventId, Converter converter) throws JSONException {
+    public EventEqual(String userToken, String valueString, String url, String eventId, Converter converter) throws JSONException {
         this.value = new JSONTokener(valueString).nextValue();
         this.url = url;
         this.eventId = eventId;
         this.converter = converter;
+        this.userToken = userToken;
     }
 
     @Override
@@ -101,6 +103,9 @@ public class EventEqual extends BaseOperator {
             HttpPost request = new HttpPost(this.url);
             StringEntity params = new StringEntity(json.toString());
             request.addHeader("content-type", "application/json");
+            if (!this.userToken.equals("")) {
+                request.addHeader("Authorization", userToken);
+            }
             request.setEntity(params);
             CloseableHttpResponse resp = httpClient.execute(request);
             resp.close();
