@@ -69,7 +69,8 @@ public class EventEqualWithConversionTest {
             }
         });
         HttpServer converterServer = ConverterServerMock.create("/inCharacteristic/outCharacteristic");
-        Converter converter = new Converter("http://localhost:"+converterServer.getAddress().getPort(), "inCharacteristic", "outCharacteristic");
+        String mockUrl = "http://localhost:"+converterServer.getAddress().getPort();
+        Converter converter = new Converter(mockUrl, mockUrl, "inCharacteristic", "outCharacteristic");
         EventEqual events = new EventEqual("", configuredValue, "http://localhost:"+server.getAddress().getPort()+"/endpoint", "test", converter);
         Config config = new Config(new JSONHelper().parseFile("config.json").toString());
         ConfigProvider.setConfig(config);
@@ -116,7 +117,8 @@ public class EventEqualWithConversionTest {
             }
         });
         HttpServer converterServer = ConverterServerMock.createWithResponse("/inCharacteristic/outCharacteristic", conversionResp);
-        Converter converter = new Converter("http://localhost:"+converterServer.getAddress().getPort(), "inCharacteristic", "outCharacteristic");
+        String mockUrl = "http://localhost:"+converterServer.getAddress().getPort();
+        Converter converter = new Converter(mockUrl, mockUrl, "inCharacteristic", "outCharacteristic");
         EventEqual events = new EventEqual("", configuredValue, "http://localhost:"+server.getAddress().getPort()+"/endpoint", "test", converter);
         Config config = new Config(new JSONHelper().parseFile("config.json").toString());
         ConfigProvider.setConfig(config);
