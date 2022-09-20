@@ -37,9 +37,9 @@ public class EventEqual extends BaseOperator {
     private String url;
     private String eventId;
     private String userToken;
-    private Converter converter;
+    private ConverterInterface converter;
 
-    public EventEqual(String userToken, String valueString, String url, String eventId, Converter converter) throws JSONException {
+    public EventEqual(String userToken, String valueString, String url, String eventId, ConverterInterface converter) throws JSONException {
         this.value = new JSONTokener(valueString).nextValue();
         this.url = url;
         this.eventId = eventId;
@@ -60,7 +60,7 @@ public class EventEqual extends BaseOperator {
         }
     }
 
-    private Object getValueOfInput(FlexInput input) throws IOException, NoValueException {
+    private Object getValueOfInput(FlexInput input) throws Exception {
         return this.converter.convert(input, input.getValue(Object.class));
     }
 
